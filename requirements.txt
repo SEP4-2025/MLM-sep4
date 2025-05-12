@@ -1,0 +1,19 @@
+# requirements.txt
+
+# --- Core API ---
+fastapi
+uvicorn[standard] # ASGI server with performance extras
+
+# --- ML & Data Handling ---
+tensorflow        # Or your specific ML library (xgboost, tensorflow, pytorch, etc.) will aslo save load models (hopefully)
+numpy         
+pandas            # For data manipulation (very common)
+# joblib          # Common for saving/loading scikit-learn models
+
+# --- Utilities ---
+python-dotenv   # For managing environment variables (API keys, paths, etc.)
+
+# --- Development/Notebook ---
+# Optional: Add these if you want 'pip install -r requirements.txt' to also set up your dev environment
+jupyterlab
+notebook
