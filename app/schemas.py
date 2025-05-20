@@ -19,26 +19,79 @@ class SensorId(int, Enum):
 
 # --- Input Schema ---
 class InputData(BaseModel):
-    id: int = Field(..., description="Reading ID")
-    value: float = Field(..., description="Sensor reading value")
-    timeStamp: datetime = Field(..., description="Timestamp of the reading")
-    sensorId: SensorId = Field(..., description="ID of the sensor")
-    
+    temperature: float = Field(
+        ...,
+        description="Current temperature reading for the greenhouse"
+    )
+    light: float = Field(
+        ...,
+        description="Current light level reading for the greenhouse"
+    )
+    airHumidity: float = Field(
+        ...,
+        description="Current air humidity reading for the greenhouse"
+    )
+    soilHumidity: float = Field(
+        ...,
+        description="Current soil humidity reading for the greenhouse"
+    )
+    date: datetime = Field(
+        ...,
+        description="Timestamp when this full set of sensor readings was taken"
+    )
+    greenhouseId: int = Field(
+        ...,
+        description="Identifier of the greenhouse to which these readings belong"
+    )
+    sensorReadingId: int = Field(
+        ...,
+        description="Database ID of the individual sensor reading event"
+    )
+
     class Config:
-        json_schema_extra = {
+        schema_extra = {
             "example": {
-                "id": 1,
-                "value": 22,
-                "timeStamp": "2025-05-01T08:00:00",
-                "sensorId": 1
+                "temperature": 23.5,
+                "light": 400.0,
+                "airHumidity": 48.2,
+                "soilHumidity": 75.0,
+                "date": "2025-05-19T10:15:00",
+                "greenhouseId": 2,
+                "sensorReadingId": 1234
             }
         }
 
 # --- Output Schema ---
 class OutputData(BaseModel):
-    # Example prediction output - Adjust based on what your model predicts
-    prediction: Union[float, str, List[float]] = Field(..., description="The prediction result from the model (e.g., a score, class label, or list of probabilities)")
-    prediction_proba: Optional[List[float]] = Field(None, description="Optional: Prediction probabilities if applicable")
-    input_received: InputData = Field(..., description="A copy of the input data that was processed")
-    # Add other relevant information if needed
-    # model_version: Optional[str] = Field(None, description="Version of the model used")
+    # The model's predicted next-hour soil humidity value
+    prediction: float = Field(
+        ...,
+        description="Predicted soil humidity percentage for the next hour"
+    )
+    # Optional probabilities for each class (if the model supports predict_proba)
+    prediction_proba: Optional[List[float]] = Field(
+        None,
+        description="Optional list of class probabilities from the model"
+    )
+    # Echo back the input that produced this prediction
+    input_received: InputData = Field(
+        ...,
+        description="The input payload that was used to generate this prediction"
+    )
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "prediction": 74.32,
+                "prediction_proba": [0.8, 0.2],
+                "input_received": {
+                    "temperature": 23.65,
+                    "light": 391.35,
+                    "airHumidity": 48.46,
+                    "soilHumidity": 75.00,
+                    "date": "2025-05-06T10:37:25.760000",
+                    "greenhouseId": 1,
+                    "sensorReadingId": 4321
+                }
+            }
+        }
