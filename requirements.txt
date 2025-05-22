@@ -17,3 +17,7 @@ python-dotenv   # For managing environment variables (API keys, paths, etc.)
 # Optional: Add these if you want 'pip install -r requirements.txt' to also set up your dev environment
 jupyterlab
 notebook
+
+joblib
+scikit-learn
+xgboost
